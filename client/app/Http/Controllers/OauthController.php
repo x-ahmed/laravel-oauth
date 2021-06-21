@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\RedirectResponse;
 
 class OauthController extends Controller
@@ -43,8 +45,32 @@ class OauthController extends Controller
         return redirect("{$this->serverUrl}/oauth/authorize?{$query}");
     }
 
-    public function callback(Request $request)
+    /**
+     * Call authorization token back to the client
+     *
+     * https://laravel.com/docs/7.x/passport#requesting-tokens
+     *      : Converting Authorization Codes To Access Tokens
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Illuminate\Http\Response
+     **/
+    public function callback(Request $request): Response
     {
-        dd($request->all());
+        $state = $request->session()->pull('state');
+
+        throw_unless(
+            strlen($state) > 0 && $state === $request->state,
+            InvalidArgumentException::class
+        );
+
+        $response = Http::post("{$this->serverUrl}/oauth/token", [
+            'grant_type'    => 'authorization_code',
+            'client_id'     => '1',                                          // the server vue UI created client id
+            'client_secret' => 'iITOfVD5KD3luEzxLC6CMgoMswPukRkUrQTcK9fU',   // the server vue UI created client secret
+            'redirect_uri'  => $this->clientUrl,
+            'code'          => $request->code,
+        ]);
+        
+        dd($response->json());
     }
 }
