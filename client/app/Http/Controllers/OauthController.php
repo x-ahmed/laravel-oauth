@@ -9,9 +9,6 @@ use Illuminate\Http\RedirectResponse;
 
 class OauthController extends Controller
 {
-    /** @var string $url */
-    private $url;
-
     /**
      * Construct new instance.
      *
