@@ -53,7 +53,10 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'server_url' => env('SERVER_URL', 'http://localhost'),
+
+    'server_url'    => env('OAUTH_SERVER_URI', 'http://localhost'),
+    'client_id'     => env('OAUTH_SERVER_ID', null),
+    'client_secret' => env('OAUTH_SERVER_SECRET', null),
 
     'asset_url' => env('ASSET_URL', null),
 

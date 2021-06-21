@@ -48,12 +48,10 @@ you will need to define redirect uri for OAuth2 authorization callback.
 In the server app, navigate to `http://server.test/oauth` route. And here
 create new OAuth client. It will generate client ID and secret.
 
-Next, in the client app, add following configurations in the `.env` file and it is
-ready to use.
+Next, in the client app, rename `.env.example` to `.env` then add following configuration values.
 
 ```
-OAUTH_SERVER_ID=<client-id>
-OAUTH_SERVER_SECRET=<client=secret>
-OAUTH_SERVER_REDIRECT_URI=http://client.test/oauth/callback
 OAUTH_SERVER_URI=http://server.test
+OAUTH_SERVER_ID=<client-id>
+OAUTH_SERVER_SECRET=<client-secret>
 ```

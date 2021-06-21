@@ -17,8 +17,10 @@ class OauthController extends Controller
      */
     public function __construct()
     {
-        $this->clientUrl = route('oauth.callback');
-        $this->serverUrl = config('app.server_url');
+        $this->clientUrl    = route('oauth.callback');
+        $this->serverUrl    = config('app.server_url');
+        $this->clientId     = config('app.client_id');
+        $this->clientSecret = config('app.client_secret');
     }
 
     /**
@@ -34,7 +36,7 @@ class OauthController extends Controller
         $request->session()->put('state', $state = Str::random(40));
 
         $query = http_build_query([
-            'client_id'     => '1',                // the server vue UI created client id
+            'client_id'     => $this->clientId,    // the server vue UI created client id
             'redirect_uri'  => $this->clientUrl,
             'response_type' => 'code',
             'scope'         => '*',
@@ -65,8 +67,8 @@ class OauthController extends Controller
 
         $response = Http::post("{$this->serverUrl}/oauth/token", [
             'grant_type'    => 'authorization_code',
-            'client_id'     => '1',                                          // the server vue UI created client id
-            'client_secret' => 'iITOfVD5KD3luEzxLC6CMgoMswPukRkUrQTcK9fU',   // the server vue UI created client secret
+            'client_id'     => $this->clientId,        // the server vue UI created client id
+            'client_secret' => $this->clientSecret,    // the server vue UI created client secret
             'redirect_uri'  => $this->clientUrl,
             'code'          => $request->code,
         ]);
