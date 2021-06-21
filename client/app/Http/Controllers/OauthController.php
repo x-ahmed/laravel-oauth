@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\RedirectResponse;
@@ -52,9 +51,10 @@ class OauthController extends Controller
      *      : Converting Authorization Codes To Access Tokens
      *
      * @param \Illuminate\Http\Request $request
-     * @return Illuminate\Http\Response
+     * @return Illuminate\Routing\Redirector|Illuminate\Http\RedirectResponse
+     * @throws InvalidArgumentException
      **/
-    public function callback(Request $request): Response
+    public function callback(Request $request): Redirector | RedirectResponse
     {
         $state = $request->session()->pull('state');
 
@@ -70,7 +70,16 @@ class OauthController extends Controller
             'redirect_uri'  => $this->clientUrl,
             'code'          => $request->code,
         ]);
-        
-        dd($response->json());
+
+        $response = $response->json();
+
+        $request->user()->token()->delete();
+        $request->user()->token()->create([
+            'access_token'  => $response['access_token'],
+            'refresh_token' => $response['refresh_token'],
+            'expires_in'    => $response['expires_in'],
+        ]);
+
+        return redirect('/home');
     }
 }
