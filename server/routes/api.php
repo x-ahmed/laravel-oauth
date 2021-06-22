@@ -16,11 +16,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('posts', function () {
+
+    // https://laravel.com/docs/7.x/passport#checking-scopes
+    Route::middleware('scope:view-posts')->get('posts', function () {
         return Post::all();
     });
 
-    Route::get('user', function (Request $request) {
+    // https://laravel.com/docs/7.x/passport#checking-scopes
+    Route::middleware('scope:view-user')->get('user', function (Request $request) {
         return $request->user();
     });
 });

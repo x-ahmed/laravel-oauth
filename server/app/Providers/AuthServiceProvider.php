@@ -27,5 +27,13 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
+
+        // https://laravel.com/docs/7.x/passport#token-scopes
+        // https://laravel.com/docs/7.x/passport#defining-scopes
+        // https://laravel.com/docs/7.x/passport#default-scope
+        Passport::tokensCan([
+            'view-posts' => 'View Posts',
+            'view-user'  => 'View User',
+        ]);
     }
 }

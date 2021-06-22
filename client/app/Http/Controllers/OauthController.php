@@ -39,7 +39,7 @@ class OauthController extends Controller
             'client_id'     => $this->clientId,    // the server vue UI created client id
             'redirect_uri'  => $this->clientUrl,
             'response_type' => 'code',
-            'scope'         => '*',
+            'scope'         => 'view-posts',       // https://laravel.com/docs/7.x/passport#assigning-scopes-to-tokens
             'state'         => $state,
         ]);
 
