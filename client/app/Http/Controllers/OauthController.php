@@ -84,4 +84,34 @@ class OauthController extends Controller
 
         return redirect('/home');
     }
+
+    /**
+     * Request a refreshed token from oauth server.
+     *
+     * https://laravel.com/docs/7.x/passport#refreshing-tokens
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return Illuminate\Routing\Redirector|Illuminate\Http\RedirectResponse
+     **/
+    public function refresh(Request $request): Redirector | RedirectResponse
+    {
+        $response = Http::post("{$this->serverUrl}/oauth/token", [
+            'grant_type'    => 'refresh_token',
+            'refresh_token' => $request->user()->token->refresh_token,
+            'client_id'     => $this->clientId,                          // the server vue UI created client id
+            'client_secret' => $this->clientSecret,                      // the server vue UI created client secret
+            'redirect_uri'  => $this->clientUrl,
+            'scope'         => 'view-posts',
+        ]);
+
+        $response = $response->json();
+
+        $request->user()->token()->update([
+            'access_token'  => $response['access_token'],
+            'refresh_token' => $response['refresh_token'],
+            'expires_in'    => $response['expires_in'],
+        ]);
+
+        return redirect('/home');
+    }
 }

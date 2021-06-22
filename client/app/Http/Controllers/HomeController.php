@@ -32,6 +32,10 @@ class HomeController extends Controller
             return view('home', ['posts' => []]);
         }
 
+        if (auth()->user()->token->isExpired()) {
+            return redirect()->route('oauth.refresh');
+        }
+
         $response = Http::withHeaders([
             'Accept'        => 'application/json',
             'Content-Type'  => 'application/json',

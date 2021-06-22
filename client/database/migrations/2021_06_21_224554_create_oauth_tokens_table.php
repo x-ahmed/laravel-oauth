@@ -16,7 +16,7 @@ class CreateOauthTokensTable extends Migration
         Schema::create('oauth_tokens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->integer('expires_in');
+            $table->bigInteger('expires_in');
             $table->text('access_token');
             $table->text('refresh_token');
             $table->timestamps();

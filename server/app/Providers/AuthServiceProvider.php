@@ -35,5 +35,10 @@ class AuthServiceProvider extends ServiceProvider
             'view-posts' => 'View Posts',
             'view-user'  => 'View User',
         ]);
+
+        // https://laravel.com/docs/7.x/passport#token-lifetimes
+        Passport::tokensExpireIn(now()->addSeconds(10));
+        Passport::refreshTokensExpireIn(now()->addDays(30));
+        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
     }
 }

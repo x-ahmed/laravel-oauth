@@ -15,6 +15,10 @@ use App\Http\Controllers\OauthController;
 |
 */
 
+Route::group(['as' => 'oauth.', 'prefix' => 'oauth'], function () {
+    Route::get('refresh', [OauthController::class, 'refresh'])->name('refresh');
+});
+
 // Redirect from this client to the oauth server requesting an authorization token
 Route::group(['as' => 'oauth.', 'prefix' => 'oauth'], function () {
     Route::get('callback', [OauthController::class, 'callback'])->name('callback');
