@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,28 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $serverUrl   = config('app.server_url');
+        $accessToken = auth()->user()->token?->access_token;
+
+        if (!$accessToken) {
+            return view('home', ['posts' => []]);
+        }
+
+        $response = Http::withHeaders([
+            'Accept'        => 'application/json',
+            'Content-Type'  => 'application/json',
+            'Authorization' => "Bearer {$accessToken}",
+        ])->get("{$serverUrl}/api/posts");
+
+        if ($response->failed()) {
+            return view('home', ['posts' => []]);
+        }
+
+        $posts = new Collection();
+        foreach ($response->json() as $post) {
+            $posts->push((object)$post);
+        }
+
+        return view('home', \compact('posts'));
     }
 }

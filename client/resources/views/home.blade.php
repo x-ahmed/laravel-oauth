@@ -15,9 +15,16 @@
                             </div>
                         @endif
 
-                        <a href="{{ route('oauth.redirect') }}">
-                            {{ __('Oauth Server Authorization') }}
-                        </a>
+                        @forelse ($posts as $post)
+                            <div class="py-3 border-bottom">
+                                <h3>{{ $post->title }}</h3>
+                                <div>{{ $post->body }}</div>
+                            </div>
+                        @empty
+                            <a href="{{ route('oauth.redirect') }}">
+                                {{ __('Oauth Server Authorization') }}
+                            </a>
+                        @endforelse
                     </div>
                 </div>
             </div>
